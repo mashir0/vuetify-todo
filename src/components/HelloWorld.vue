@@ -18,8 +18,14 @@
 
     <h1>todos</h1>
     <div class="todo">
-      <input type="text" placeholder="title" v-model="title" />
-      <button @click="addTodo" @keyup.enter="addTodo">追加</button>
+      <input
+        type="text"
+        placeholder="title"
+        @keyup.esc="title = ''"
+        @keyup.enter="addTodo"
+        v-model="title"
+      />
+      <button @click="addTodo">追加</button>
 
       <div v-if="todos.length">
         <ul v-for="(todo, index) in todos" :key="index">
