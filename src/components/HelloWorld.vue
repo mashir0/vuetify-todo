@@ -1,111 +1,141 @@
 <template>
-  <div class="top">
-    <h1>Vue学習の為のTODOアプリsample</h1>
-    <div class="kadai">
-      <ul>
-        <h3>機能</h3>
-        <li>追加</li>
-        <li>編集(double click -> enter,esc, focus out)</li>
-        <li>削除</li>
-        <h3>余力があれば</h3>
-        <li>sort</li>
-        <li>filter</li>
-        <li>double clickでfocusされないbug修正</li>
-      </ul>
-      <h3>参考サイト</h3>
-      <a href="https://jp.vuejs.org/v2/examples/todomvc.html">TodoMVC の例</a>
-    </div>
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-img
+          :src="require('../assets/logo.svg')"
+          class="my-3"
+          contain
+          height="200"
+        />
+      </v-col>
 
-    <h1>todos</h1>
-    <div class="todo">
-      <input
-        type="text"
-        placeholder="title"
-        @keyup.esc="title = ''"
-        @keyup.enter="addTodo"
-        v-model="title"
-      />
-      <button @click="addTodo">追加</button>
+      <v-col class="mb-4">
+        <h1 class="display-2 font-weight-bold mb-3">
+          Welcome to Vuetify
+        </h1>
 
-      <div v-if="todos.length">
-        <ul v-for="(todo, index) in todos" :key="index">
-          <li :class="{ done: todo.done }">
-            <input
-              v-if="edit == todo"
-              @keyup.enter="edit = null"
-              @keyup.esc="edit = null"
-              @blur="edit = null"
-              v-model="todo.title"
-            />
-            <div v-else>
-              <input class="toggle" type="checkbox" v-model="todo.done" />
-              <label @dblclick="edit = todo">{{ todo.title }}</label>
-              <button @click="delTodo(index)">del</button>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <h3>todoがありません</h3>
-      </div>
-    </div>
-  </div>
+        <p class="subheading font-weight-regular">
+          For help and collaboration with other Vuetify developers,
+          <br />please join our online
+          <a href="https://community.vuetifyjs.com" target="_blank"
+            >Discord Community</a
+          >
+        </p>
+      </v-col>
+
+      <v-col class="mb-5" cols="12">
+        <h2 class="headline font-weight-bold mb-3">
+          What's next?
+        </h2>
+
+        <v-row justify="center">
+          <a
+            v-for="(next, i) in whatsNext"
+            :key="i"
+            :href="next.href"
+            class="subheading mx-3"
+            target="_blank"
+          >
+            {{ next.text }}
+          </a>
+        </v-row>
+      </v-col>
+
+      <v-col class="mb-5" cols="12">
+        <h2 class="headline font-weight-bold mb-3">
+          Important Links
+        </h2>
+
+        <v-row justify="center">
+          <a
+            v-for="(link, i) in importantLinks"
+            :key="i"
+            :href="link.href"
+            class="subheading mx-3"
+            target="_blank"
+          >
+            {{ link.text }}
+          </a>
+        </v-row>
+      </v-col>
+
+      <v-col class="mb-5" cols="12">
+        <h2 class="headline font-weight-bold mb-3">
+          Ecosystem
+        </h2>
+
+        <v-row justify="center">
+          <a
+            v-for="(eco, i) in ecosystem"
+            :key="i"
+            :href="eco.href"
+            class="subheading mx-3"
+            target="_blank"
+          >
+            {{ eco.text }}
+          </a>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "HelloWorld",
-  data() {
-    return {
-      edit: {},
-      title: "",
-      todos: []
-    };
-  },
-  methods: {
-    addTodo() {
-      this.todos.push({
-        title: this.title,
-        done: false,
-        edit: false
-      });
-      this.title = "";
-      this.content = "";
-    },
 
-    delTodo(index) {
-      this.todos.splice(index, 1);
-    }
-  }
+  data: () => ({
+    ecosystem: [
+      {
+        text: "vuetify-loader",
+        href: "https://github.com/vuetifyjs/vuetify-loader"
+      },
+      {
+        text: "github",
+        href: "https://github.com/vuetifyjs/vuetify"
+      },
+      {
+        text: "awesome-vuetify",
+        href: "https://github.com/vuetifyjs/awesome-vuetify"
+      }
+    ],
+    importantLinks: [
+      {
+        text: "Documentation",
+        href: "https://vuetifyjs.com"
+      },
+      {
+        text: "Chat",
+        href: "https://community.vuetifyjs.com"
+      },
+      {
+        text: "Made with Vuetify",
+        href: "https://madewithvuejs.com/vuetify"
+      },
+      {
+        text: "Twitter",
+        href: "https://twitter.com/vuetifyjs"
+      },
+      {
+        text: "Articles",
+        href: "https://medium.com/vuetify"
+      }
+    ],
+    whatsNext: [
+      {
+        text: "Explore components",
+        href: "https://vuetifyjs.com/components/api-explorer"
+      },
+      {
+        text: "Select a layout",
+        href: "https://vuetifyjs.com/layout/pre-defined"
+      },
+      {
+        text: "Frequently Asked Questions",
+        href: "https://vuetifyjs.com/getting-started/frequently-asked-questions"
+      }
+    ]
+  })
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.top {
-  font-size: 150%;
-  width: 80%;
-  margin: 0 auto;
-  max-width: 500px;
-}
-
-.kadai {
-  padding: 10px;
-  border: medium solid #222222;
-}
-.kadai li {
-  display: list-item;
-  list-style: none;
-}
-.todo {
-}
-
-.todo li {
-  width: 80%;
-  list-style: none;
-}
-
-.done {
-  text-decoration: line-through;
-}
-</style>
