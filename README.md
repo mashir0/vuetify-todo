@@ -1,4 +1,7 @@
-# vue-todo
+# vuetify-todos
+sample
+https://mashir0.github.io/vuetify-todo/
+
 
 ## Project setup
 ```
