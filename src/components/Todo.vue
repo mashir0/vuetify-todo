@@ -40,7 +40,11 @@
           <v-icon dark>mdi-calendar-clock</v-icon>
         </v-btn>
 
-        <v-btn v-if="detailFlag" color="primary" @click="addTodo">
+        <!-- <v-btn v-if="detailFlag" color="primary" @click="addTodo" dense>
+          save
+        </v-btn> -->
+
+        <v-btn v-if="detailFlag" color="primary" @click="addTodo" small>
           save
         </v-btn>
       </div>
@@ -59,7 +63,8 @@
               dense
               v-for="(todo, index) in filterTodos"
               :key="todo.id"
-              class="pl-0"
+              class="pr-0"
+              height="50"
             >
               <!-- chk box -->
               <v-list-item-action>
@@ -72,6 +77,7 @@
                   :class="{ done: todo.done }"
                   v-text="todo.title"
                 />
+                <v-list-item-subtitle v-text="todo.detail" />
                 <!-- show dialog -->
                 <todo-dialog :todo="todo" ref="dialogRef" />
               </v-list-item-content>
