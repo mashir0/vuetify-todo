@@ -45,41 +45,49 @@
         </v-btn>
       </div>
 
-      <!-- todo area -->
-      <v-list v-if="todos.length">
-        <v-list-item
-          dense
-          v-for="(todo, index) in todos"
-          :key="index"
-          class="pl-0"
-        >
-          <!-- chk box -->
-          <v-list-item-action>
-            <v-checkbox v-model="todo.done" color="primary"></v-checkbox>
-          </v-list-item-action>
+      <v-tabs v-model="currentItem" fixed-tabs slider-color="white">
+        <v-tab v-for="item in items" :key="item" :href="`#${item}`">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
 
-          <!-- todo -->
-          <v-list-item-content @click="showDialog($refs.dialogRef[index])">
-            <v-list-item-title
-              :class="{ done: todo.done }"
-              v-text="todo.title"
-            />
-            <!-- show dialog -->
-            <todo-dialog :todo="todo" ref="dialogRef" />
-          </v-list-item-content>
+      <v-tabs-items v-model="currentItem">
+        <v-tab-item v-for="item in items" :key="item" :value="item">
+          <!-- todo area -->
+          <v-list v-if="filterTodos.length">
+            <v-list-item
+              dense
+              v-for="(todo, index) in filterTodos"
+              :key="todo.id"
+              class="pl-0"
+            >
+              <!-- chk box -->
+              <v-list-item-action>
+                <v-checkbox v-model="todo.done" color="primary" />
+              </v-list-item-action>
 
-          <!-- del btn-->
-          <v-list-item-action>
-            <v-row>
-              <v-btn outlined @click="delTodo(index)">del</v-btn>
-            </v-row>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
+              <!-- todo -->
+              <v-list-item-content @click="showDialog($refs.dialogRef[index])">
+                <v-list-item-title
+                  :class="{ done: todo.done }"
+                  v-text="todo.title"
+                />
+                <!-- show dialog -->
+                <todo-dialog :todo="todo" ref="dialogRef" />
+              </v-list-item-content>
 
-      <div v-else>
-        <h3>todoがありません</h3>
-      </div>
+              <!-- del btn-->
+              <v-list-item-action>
+                <v-btn outlined @click="delTodo(index)">del</v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+          <div v-else>
+            <h3>no item</h3>
+          </div>
+        </v-tab-item>
+      </v-tabs-items>
     </v-card>
   </v-container>
   <!-- </v-content> -->
@@ -96,12 +104,20 @@ export default {
   },
   data() {
     return {
+      currentItem: "active",
+      items: ["active", "done"],
       edit: {},
       title: "",
       detail: "",
       todos: [],
       detailFlag: false
     };
+  },
+  computed: {
+    filterTodos() {
+      let flg = this.currentItem === "done";
+      return this.todos.filter(todo => todo.done === flg);
+    }
   },
   methods: {
     addTodo() {
@@ -110,7 +126,8 @@ export default {
           title: this.title,
           detail: this.detail,
           done: false,
-          edit: false
+          edit: false,
+          id: this.todos.length
         });
         this.title = "";
         this.detail = "";
