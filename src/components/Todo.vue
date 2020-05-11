@@ -1,14 +1,14 @@
 <template>
   <!-- <v-content> -->
   <v-container>
-    <v-card class="mx-auto mb-5" outlined shaped max-width="500">
+    <v-card class="mx-auto mb-5" outlined shaped max-width="600">
       <v-card-title>Vuetify 学習</v-card-title>
       <v-card-text>
         TodoアプリをVuetifyで作り変え
       </v-card-text>
     </v-card>
 
-    <v-card class="mx-auto mb-5 pa-5" outlined shaped max-width="500">
+    <v-card class="mx-auto mb-5 pa-5" outlined shaped max-width="600">
       <h1>todos</h1>
       <!-- title -->
       <v-text-field
@@ -57,7 +57,7 @@
 
       <v-tabs-items v-model="currentItem">
         <v-tab-item v-for="item in items" :key="item" :value="item">
-          <!-- todo area -->
+          <!-- ### todo area
           <v-list v-if="filterTodos.length">
             <v-list-item
               dense
@@ -66,13 +66,50 @@
               class="pr-0"
               height="50"
             >
-              <!-- chk box -->
+              ### chk box
               <v-list-item-action>
                 <v-checkbox v-model="todo.done" color="primary" />
               </v-list-item-action>
 
-              <!-- todo -->
+              ### todo
               <v-list-item-content @click="showDialog($refs.dialogRef[index])">
+                <v-list-item-title
+                  :class="{ done: todo.done }"
+                  v-text="todo.title"
+                />
+                <v-list-item-subtitle v-text="todo.detail" />
+                ### show dialog
+                <todo-dialog :todo="todo" ref="dialogRef" />
+              </v-list-item-content>
+
+              ### del btn
+              <v-list-item-action>
+                <v-btn outlined @click="delTodo(todo)">del</v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+          <div v-else>
+            <h3>no item</h3>
+          </div> -->
+
+          <v-data-table
+            :headers="headers"
+            :items="filterTodos"
+            item-key="id"
+            show-select
+            class="elevation-1"
+          >
+            <!-- chk box -->
+            <template v-slot:item.data-table-select="{ item: todo }">
+              <v-checkbox v-model="todo.done" color="primary" />
+            </template>
+
+            <!-- contents -->
+            <template v-slot:item.contents="{ item: todo }">
+              <v-list-item-content
+                @click="showDialog($refs.dialogRef[todos.indexOf(todo)])"
+              >
                 <v-list-item-title
                   :class="{ done: todo.done }"
                   v-text="todo.title"
@@ -81,17 +118,18 @@
                 <!-- show dialog -->
                 <todo-dialog :todo="todo" ref="dialogRef" />
               </v-list-item-content>
+            </template>
 
-              <!-- del btn-->
-              <v-list-item-action>
-                <v-btn outlined @click="delTodo(index)">del</v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <div v-else>
-            <h3>no item</h3>
-          </div>
+            <!-- actions -->
+            <template v-slot:item.actions="{ item: todo }">
+              <v-icon small @click="delTodo(todo)" class="mr-2">
+                mdi-pencil
+              </v-icon>
+              <v-icon small @click="delTodo(todo)">
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
         </v-tab-item>
       </v-tabs-items>
     </v-card>
@@ -110,6 +148,35 @@ export default {
   },
   data() {
     return {
+      headers: [
+        {
+          text: "id",
+          align: "start",
+          value: "id"
+        },
+        {
+          text: "contents",
+          sortable: false,
+          value: "contents"
+        },
+        // {
+        //   text: "done",
+        //   value: "done"
+        // },
+        {
+          text: "create",
+          value: "createDate"
+        },
+        {
+          text: "limit",
+          value: "limit"
+        },
+        {
+          sortable: false,
+          value: "actions"
+        }
+      ],
+
       currentItem: "active",
       items: ["active", "done"],
       edit: {},
@@ -140,9 +207,13 @@ export default {
       }
     },
 
-    delTodo(index) {
-      this.todos.splice(index, 1);
+    delTodo(todo) {
+      const index = this.todos.indexOf(todo);
+      confirm("Are you sure you want to delete this todo?") &&
+        this.todos.splice(index, 1);
     },
+
+    // editTodo(todo) {},
 
     showDialog(_refs) {
       // console.log(_refs);
