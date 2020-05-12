@@ -1,14 +1,14 @@
 <template>
   <!-- <v-content> -->
   <v-container>
-    <v-card class="mx-auto mb-5" outlined shaped max-width="600">
+    <v-card class="mx-auto mb-5" outlined shaped max-width="1000">
       <v-card-title>Vuetify 学習</v-card-title>
       <v-card-text>
         TodoアプリをVuetifyで作り変え
       </v-card-text>
     </v-card>
 
-    <v-card class="mx-auto mb-5 pa-5" outlined shaped max-width="600">
+    <v-card class="mx-auto mb-5 pa-5" outlined shaped max-width="1000">
       <h1>todos</h1>
       <!-- title -->
       <v-text-field
@@ -92,7 +92,6 @@
           <div v-else>
             <h3>no item</h3>
           </div> -->
-
           <v-data-table
             :headers="headers"
             :items="filterTodos"
@@ -100,6 +99,7 @@
             show-select
             class="elevation-1"
           >
+            <!-- :hide-default-header="isXs" -->
             <!-- chk box -->
             <template v-slot:item.data-table-select="{ item: todo }">
               <v-checkbox v-model="todo.done" color="primary" />
@@ -186,10 +186,18 @@ export default {
       detailFlag: false
     };
   },
+  // mounted() {
+  //   console.log(this.$vuetify.breakpoint.name);
+  // },
   computed: {
     filterTodos() {
       let flg = this.currentItem === "done";
       return this.todos.filter(todo => todo.done === flg);
+    },
+
+    isXs() {
+      // console.log(this.$vuetify.breakpoint.name);
+      return this.$vuetify.breakpoint.name === "xs";
     }
   },
   methods: {
